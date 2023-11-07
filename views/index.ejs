@@ -3,83 +3,145 @@
     <head>
         <meta charset="UTF-8">
         <title>User list</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+
+            form {
+                width: 60%;
+                margin: 100px auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            textarea {
+                width: 95%;
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+            }
+
+            input[type="radio"] {
+                margin-right: 10px;
+            }
+
+            .checkbox-label {
+                display: inline-block;
+                margin-right: 10px;
+            }
+
+            .error {
+                color: red;
+            }
+
+            #submit-button {
+                background-color: #337ab7;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            #submit-button:hover {
+                background-color: #286090;
+            }
+        </style>
     </head>
     <body>
-        <table>
-            <% users.forEach(function(user) { %>
-            <tr>
-                <th id="nameTitle">名前<%= user.name %></th>
-                <th id="emailTitle">email<%= user.email %></th>
-                <th><a href="/edit/<%= user.id %>">更新</a></th>
-                <th><a href="/delete/<%= user.id %>">削除</a></th>
-            </tr>
-            <% }); %>
-        </table>
+        <form id="survey-form" action="form.html" method="post">
+            <label for="name">名前:</label>
+            <input type="text" name="name" id="name" required><span id="name-error" class="error"></span><br>
+            <label for="kana">かな:</label>
+            <input type="text" name="kana" id="kana" required><span id="kana-error" class="error"></span><br>
+            <label>性別:</label>
+            <input type="radio" name="gender" value="男" id="male"> 男 <input type="radio" name="gender" value="女" id="female"> 女<span id="gender-error" class="error"></span><br>
+            <label for="email">Eメール:</label>
+            <input type="email" name="email" id="email" required><span id="email-error" class="error"></span><br>
+            <label for="address">お住まいの住所:</label>
+            <input type="text" name="address" id="address" required><span id="address-error" class="error"></span><br>
+            <label for="phone">電話番号:</label>
+            <input type="text" name="phone" id="phone" required><span id="phone-error" class="error"></span><br>
+            <label>当サイトを知った内容:</label>
+            <input type="checkbox" name="source[]" value="広告で知った"> 広告で知った <input type="checkbox" name="source[]" value="サイトを見た"> サイトを見た <input type="checkbox" name="source[]" value="知人から教えてもらった"> 知人から教えてもらった <input type="checkbox" name="source[]" value="YouTubeの広告を見た"> YouTubeの広告を見た<br>
+            <label for="inquiry">問い合わせ内容:</label>
+            <textarea name="inquiry" rows="4" cols="50"></textarea><br>
+            <input type="submit" value="送信" id="submit-button">
+        </form>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const form = document.getElementById("survey-form");
+                const nameField = document.getElementById("name");
+                const kanaField = document.getElementById("kana");
+                const genderMale = document.getElementById("male");
+                const genderFemale = document.getElementById("female");
+                const emailField = document.getElementById("email");
+                const addressField = document.getElementById("address");
+                const phoneField = document.getElementById("phone");
+                const submitButton = document.getElementById("submit-button");
 
-        <p><a href="/create">ユーザーの追加</a></p>
-        <!--こちらに基礎課題で言われてる内容を記述しましょう。ここから-->
-        <p id="textTag"></p>
-        <p id="textText"></p>
-        <ul id="file">
-        </ul>
-        <p id="pText"></p>
-        <!--こちらに基礎課題で言われてる内容を記述しましょう。ここまで-->
-        <label for="textBox">テキストを入力してください:</label>
-        <input type="text" id="textBox" placeholder="ここにテキストを入力">
-        <button id="submitButton">表示</button>
-        <p id="name"></p>
-        <p id="email"></p>
-        <script type="text/javascript">
+                form.addEventListener("submit", function (event) {
+                    let valid = true;
 
-            // 参考例
-            let textTag = document.getElementById('textTag');
-            let NUMBER = `<%= number %>`;
-            textTag.innerHTML = NUMBER;
-            // ここからはapp.jsで作成した値をここでブラウザに出力するように機能を実装していきましょう。上記の参考例を元にやってみましょう。
-            // 基礎課題01:画面に表示する機能作りましょう。
-            let textText = document.getElementById('textText');
-            let TEXT = `<%= text %>`;
-            textText.innerHTML = TEXT;
-            /*
-            基礎課題02,03をやる前に
-            配列とオブジェクトリストをapp.jsから取得するときに以下のやり方が必要になります。
-            変数名は自由に決めてください。プロパティ名についてはapp.jsでオブジェクト内に格納したプロパティ名を使用してください。
-            以下使用する際は<%#の「#」部分を「=」に変更するよう気をつけてください。%>
-            let 変数名 = JSON.parse('<%# JSON.stringify(プロパティ名) %>'.replace(/&#34;/g, '"'));
-            */
-            let object = JSON.parse('<%= JSON.stringify(item) %>'.replace(/&#34;/g, '"'));
-
-            // 基礎課題02:HTML内にulタグを作成し、liタグでapp.jsで作成した情報を画面に表示して下さい。
-            let file = document.getElementById('file')
-            file.insertAdjacentHTML('beforeend', `<li>${object}</li>`)
-            // 基礎課題03:作成したオブジェクトリストをブラウザに出力して下さい。その場合以下の様に出力して下さい。
-            // 例）
-            // name: s.chiba
-            // email: s.chiba@gmail.com
-            let objectFit = JSON.parse('<%= JSON.stringify(objectItem) %>'.replace(/&#34;/g, '"'));
-            let pText = document.getElementById('pText');
-            pText.insertAdjacentHTML('beforeend', `${objectFit[0].name}`)
-
-
-            function alertName() {
-                let users = JSON.parse('<%= JSON.stringify(users) %>'.replace(/&#34;/g, '"'));
-                console.log(users)
-                let textBox = document.getElementById('textBox');
-                let name = document.getElementById('name');
-                let email = document.getElementById('email');
-                for (let i = 0; i < users.length; i++) {
-                    if (textBox.value === `${users[i].id}`) {
-                        name.innerHTML = `${users[i].name}`;
-                        email.innerHTML = `${users[i].email}`;
-                        return;
-                    }else{
-                        name.innerHTML = "";
-                        email.innerHTML = "";
+                    if (!nameField.value.match(/^[ぁ-んァ-ンa-zA-Z]+$/)) {
+                        document.getElementById("name-error").textContent = "名前は漢字、ひらがな、英字のみ入力してください";
+                        valid = false;
+                    } else {
+                        document.getElementById("name-error").textContent = "";
                     }
-                }
-            }
-            let submitButton = document.getElementById('submitButton');
-            submitButton.addEventListener('click', alertName);
+
+                    if (!kanaField.value.match(/^[ぁ-ん]+$/)) {
+                        document.getElementById("kana-error").textContent = "かなはひらがなのみ入力してください";
+                        valid = false;
+                    } else {
+                        document.getElementById("kana-error").textContent = "";
+                    }
+
+                    if (!genderMale.checked && !genderFemale.checked) {
+                        document.getElementById("gender-error").textContent = "性別を選択してください";
+                        valid = false;
+                    } else {
+                        document.getElementById("gender-error").textContent = "";
+                    }
+
+                    if (!emailField.value.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+                        document.getElementById("email-error").textContent = "有効なメールアドレスを入力してください";
+                        valid = false;
+                    } else {
+                        document.getElementById("email-error").textContent = "";
+                    }
+
+                    if (!addressField.value.match(/^[ぁ-んァ-ン0-9]+$/)) {
+                        document.getElementById("address-error").textContent = "お住まいの住所は漢字、ひらがな、数字のみ入力してください";
+                        valid = false;
+                    } else {
+                        document.getElementById("address-error").textContent = "";
+                    }
+
+                    if (!phoneField.value.match(/^[0-9-]+$/)) {
+                        document.getElementById("phone-error").textContent = "電話番号はハイフン、数字のみ入力してください";
+                        valid = false;
+                    } else {
+                        document.getElementById("phone-error").textContent = "";
+                    }
+
+                    if (!valid) {
+                        event.preventDefault();
+                    }
+                });
+            });
+
         </script>
     </body>
 </html>
