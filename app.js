@@ -23,28 +23,23 @@ const con = mysql.createConnection({
 
 app.use(express.static("assets"));
 
-app.post("/", (req, res) => {
+app.post("/form", (req, res) => {
   const sql = "INSERT INTO questionnaire SET ?";
   con.query(sql, req.body, function (err, result, fields) {
     if (err) throw err;
     console.log(result);
-    res.redirect("/");
+    res.sendFile(path.join(__dirname, "form.html"));
   });
 });
 
 
-app.get("/create", (req, res) => {
-  res.sendFile(path.join(__dirname, "html/form.html"));
+app.get("/", (req, res) => {
+  res.render("index");
 });
 
-app.get("/edit/:id", (req, res) => {
-  const sql = "SELECT * FROM clients WHERE id = ?";
-  con.query(sql, [req.params.id], function (err, result, fields) {
-    if (err) throw err;
-    res.render("edit", {
-      user: result,
-    });
-  });
+app.get("/form", (req, res) => {
+  res.render("view/index");
 });
+
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

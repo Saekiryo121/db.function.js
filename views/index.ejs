@@ -60,7 +60,7 @@
         </style>
     </head>
     <body>
-        <form id="survey-form" action="form.html" method="post">
+        <form id="survey-form" action="/form" method="post">
             <label for="name">名前:</label>
             <input type="text" name="name" id="name" required><span id="name-error" class="error"></span><br>
             <label for="kana">かな:</label>
@@ -94,8 +94,8 @@
                 form.addEventListener("submit", function (event) {
                     let valid = true;
 
-                    if (!nameField.value.match(/^[ぁ-んァ-ンa-zA-Z]+$/)) {
-                        document.getElementById("name-error").textContent = "名前は漢字、ひらがな、英字のみ入力してください";
+                    if (!nameField.value.match(/^[ぁ-んァ-ンa-zA-Z一-龠]+$/)) {
+                        document.getElementById("name-error").textContent = "名前はひらがな、カタカナ、漢字、英字のみ入力してください";
                         valid = false;
                     } else {
                         document.getElementById("name-error").textContent = "";
@@ -122,8 +122,8 @@
                         document.getElementById("email-error").textContent = "";
                     }
 
-                    if (!addressField.value.match(/^[ぁ-んァ-ン0-9]+$/)) {
-                        document.getElementById("address-error").textContent = "お住まいの住所は漢字、ひらがな、数字のみ入力してください";
+                    if (!addressField.value.match(/^[ぁ-んァ-ン0-9一-龠]+$/)) {
+                        document.getElementById("address-error").textContent = "お住まいの住所はひらがな、カタカナ、漢字、数字のみ入力してください";
                         valid = false;
                     } else {
                         document.getElementById("address-error").textContent = "";
